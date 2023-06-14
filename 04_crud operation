@@ -1,0 +1,24 @@
+# Create the collection
+db.createCollection('emp');
+
+
+# insert a row
+db.emp.insertOne({name:"Jack",salary:2000});
+
+
+#display the documents
+db.emp.find();
+
+
+#insert more then one docuement
+db.employees.insertMany([
+	{name:'Jay', age:22},
+	{name:'Ajay', age:23},
+	{name:'Jayesh', age:24},
+	{name:'Jay', age:36, nationality:'Indian'}
+]);
+
+
+
+
+
