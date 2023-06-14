@@ -1,0 +1,150 @@
+
+ELEMENT operator
+
+db.inventory.drop();
+db.inventory.insertMany(
+[
+    {_id:1,item:{name:'ab',code:'123'},qty:10.0, tags:['A','B','C']},
+    {_id:2,item:{name:'cd',code:'123'},qty:11, tags:['D','E','M']},
+    {_id:3,item:{name:'ef',code:'456'},qty:12, tags:['F','B','D']},
+    {_id:4,item:{name:'gh',code:'456'},qty:13, tags:['G','O','C']},
+    {_id:5,item:{name:'ij',code:'567'},qty:10, tags:['A','E','D']},
+    {_id:6,item:{name:'ij',code:'567'},qty:10, tags:[['A','B'],'D']},
+    {_id:7,item:{name:'ij',code:'567'},qty:10, tags:['A','B']},
+    {_id:8,item:{name:'ij',code:'567'}, tags:['B','A']},
+    {_id:9,item:{name:'ij',code:'567'}},
+    {_id:10,item:{name:'ij',code:'567'} , qty: '20' }
+]
+);
+
+$exists (to check whether the field are present or not)
+
+inventory which don't have qty field
+db.inventory.find({qty: {$exists:false}})
+
+inventory having qty= 13
+db.inventory.find({qty : {$eq:13}})
+db.inventory.find({qty: {$exists:true, $eq:13}})
+
+
+$type:
+inventory with qty as type string
+db.inventory.find({qty: {$type:'string'}})
+db.inventory.find({qty: {$type:'double'}})
+
+
+
+Evaluation
+-------------
+db.budgets.insertMany([
+    {_id:1, category:'food', budget:400, spent:450},
+    {_id:2, category:'drinks', budget:100, spent:150},
+    {_id:3, category:'clothes', budget:1000, spent:700},
+    {_id:4, category:'travel', budget:500, spent:200},
+    {_id:5, category:'medicine', budget:100, spent:200},
+    {_id:6, category:'misc', budget:200, spent:200}
+]);
+
+$expr
+a. document whose spent > budgets
+db.budgets.find({$expr: {$gt:["$spent", "$budget"]}});
+
+
+$mod (reminder %)
+-------------------
+db.inventory.insertMany(
+[
+    {_id:1,item:{name:'ab',code:'123'},qty:10, tags:['A','B','C']},
+    {_id:2,item:{name:'cd',code:'123'},qty:11, tags:['D','E','M']},
+    {_id:3,item:{name:'ef',code:'456'},qty:12, tags:['F','B','D']},
+    {_id:4,item:{name:'gh',code:'456'},qty:13, tags:['G','O','C']},
+    {_id:5,item:{name:'ij',code:'567'},qty:10, tags:['A','E','D']},
+    {_id:6,item:{name:'ij',code:'567'},qty:10, tags:[['A','B'],'D']},
+    {_id:7,item:{name:'ij',code:'567'},qty:10, tags:['A','B']},
+    {_id:8,item:{name:'ij',code:'567'}, tags:['B','A']},
+    {_id:9,item:{name:'ij',code:'567'}},
+    {_id:10,item:{name:'ij',code:'567'} , qty: '20' }
+]
+);
+
+list of item with odd quantity.
+db.inventory.find({qty: {$mod:[2,1]}})
+
+list of budget whose spent is divisible by 100
+
+
+$text 
+-----------
+db.articles.insertMany([
+    {_id:1, subject:'Core Java', author:'abc', views:60},
+    {_id:2, subject:'Adv Java', author:'def', views:50},
+    {_id:3, subject:'Spring', author:'ghi', views:70},
+    {_id:4, subject:'Spring boot', author:'pqr', views:60},
+    {_id:5, subject:'Spring microservices with Java', author:'def', views:40},
+    {_id:6, subject:'Java framework', author:'xyz', views:10},
+    {_id:7, subject:'MongoDB', author:'lmn', views:100}
+]);
+
+docuement contain Spring.
+db.articles.find({$text: {$search: "Spring"}});
+--error: MongoServerError: text index required for $text query
+
+create index on subject:
+db.articles.createIndex({subject:"text"});
+
+
+db.articles.find({$text: {$search: "Spring"}});
+db.articles.find({$text: {$search: "Spring", $caseSensitive: true}});
+
+document containing db in the subject  
+
+regex
+-----
+db.<collection_name>.find({field:/pattern/})
+db.test.insertMany([
+  {  val: 'abc' },
+  {  val: 'def' },
+  {  val: 'lmn' },
+  {  val: 'lmna' },
+  {  val: 'lmnad' }
+]);
+where var like '%a%'
+
+db.test.find({val:/a/})
+
+
+
+
+
+Array:
+-------------------------
+db.articles.insertMany([
+    {_id:1, code:"xyz", 
+      tags:["school","book","bag","headphone"],
+      qty:[
+        {size:"S", num:10, color: "blue"},
+        {size:"M", num:20, color: "blue"},
+        {size:"L", num:3, color: "red"}
+      ]
+    },
+
+    {_id:2, code:"abc", 
+      tags:["school","book","headphone","pencil"],
+      qty:[
+        {size:"S", num:100, color: "blue"},
+        {size:"M", num:45, color: "green"},
+        {size:"L", num:10, color: "red"}
+      ]
+    },
+
+    {_id:3, code:"pqr", 
+      tags:["bag","headphone"],
+      qty:[
+        {size:"6", num:10, color: "green"},
+        {size:"7", num:40, color: "brown"},
+        {size:"8", num:5, color: "red"}
+      ]
+    }
+])
+
+document which contain book and headphone
