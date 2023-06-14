@@ -1,0 +1,103 @@
+/**
+ * order -> product
+In one order, customer can purchase many product
+One product can be order by many customer
+
+ */
+
+db.products.insertMany([
+    {_id:100, item:'Pen', price:25},
+    {_id:101, item:'Pencil', price:10},
+    {_id:102, item:'Notebook', price:100}
+]);
+
+db.customers.insertMany([
+    {_id:'C001', name:"jack", age:29},
+    {_id:'C002', name:"Jessica", age:21},
+    {_id:'C003', name:"Sam", age:39}
+]);
+
+db.orders.insertOne({
+  productId: 100,
+  customerId: "C001",
+  qty: 10,
+});
+
+//or
+
+
+db.products.insertMany([
+    {_id:100, item:'Pen', price:20},
+    {_id:101, item:'Pencil', price:10},
+    {_id:102, item:'Notebook', price:100}
+]);
+
+//today price of pen = 20
+
+//today
+db.customers.insertMany([
+  {
+    _id: "C001",
+    name: "jack",
+    age: 29,
+    orders: [
+      { productId: 100, qty: 10 },
+      { productId: 101, qty: 20 },
+    ],
+  },
+  { _id: "C002", name: "Jessica", age: 21 },
+  { _id: "C003", name: "Sam", age: 39 },
+]);
+
+
+//or
+
+db.products.insertMany([
+    {_id:100, item:'Pen', price:30},
+    {_id:101, item:'Pencil', price:10},
+    {_id:102, item:'Notebook', price:100}
+]);
+
+db.customers.insertMany([
+  {
+    _id: "C001",
+    name: "jack",
+    age: 29,
+    orders: [
+      { product: { item: "Pen", qty: 10, price: 20 } },
+      { product: { item: "Pencil", qty: 20, price: 10 } },
+    ],
+  },
+  { _id: "C002", name: "Jessica", age: 21 },
+  { _id: "C003", name: "Sam", age: 39 },
+]);
+
+
+
+
+
+//book <-------------------->author
+
+db.authors.insertMany([
+  { _id: 1, name: "Ram", age: 29, address: { street: "Lane 1", city: "Pune" } },
+  {
+    _id: 2,
+    name: "Kiran",
+    age: 25,
+    address: { street: "Lane 2", city: "Pune" },
+  },
+]);
+
+db.books.insertOne({name:"Angular", authors:[1,2]});
+
+db.books.aggregate([
+    {
+        $lookup:{
+            from:"authors",
+            localField:"authors",
+            foreignField : "_id",
+            as:"creator"
+        }
+    }
+]);
+
