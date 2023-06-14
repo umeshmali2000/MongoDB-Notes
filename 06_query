@@ -1,0 +1,164 @@
+DataType of BSON:
+Text
+Integer
+NumberLong
+NumberDecimal
+ISODate
+Timestamp
+Boolean
+Embedded document
+Array
+ObjectId
+
+
+command to see the statistic of db
+db.stats()
+
+db.numbers.insertOne({a:1})
+
+command check the datatype
+typeof db.numbers.findOne().a
+
+________________________________________________________
+Query and Projection Operation:
+
+db.inventory.insertMany(
+[
+    {_id:1,item:{name:'ab',code:'123'},qty:10, tags:['A','B','C']},
+    {_id:2,item:{name:'cd',code:'123'},qty:11, tags:['D','E','M']},
+    {_id:3,item:{name:'ef',code:'456'},qty:12, tags:['F','B','D']},
+    {_id:4,item:{name:'gh',code:'456'},qty:13, tags:['G','O','C']},
+    {_id:5,item:{name:'ij',code:'567'},qty:10, tags:['A','E','D']},
+    {_id:6,item:{name:'ij',code:'567'},qty:10, tags:[['A','B'],'D']},
+    {_id:7,item:{name:'ij',code:'567'},qty:10, tags:['A','B']}
+]
+);
+
+
+
+$eq (equal)
+list of  inventory with quantity 10
+db.inventory.find({qty:10})
+db.inventory.find({qty : {$eq:10}})
+
+find the item with name = ab
+db.inventory.find({name: {$eq : 'ab'} }) => no document select as inventory doesn't have field as name
+db.inventory.find({item.name : {$eq : 'ab'}}) => syntax error 
+db.inventory.find({'item.name' : {$eq : 'ab'}}) 
+
+find the inventory with tag = A
+db.inventory.find({tags: {$eq: 'A'}})
+
+
+$ne (not equals)
+find the invetory where qty is != 10
+db.inventory.find({qty : {$ne:10}})
+
+
+$gt (greater than operator)
+find the inventory where qty >12
+db.inventory.find({qty : {$gt:12}})
+
+
+$gte (greater than operator)
+find the inventory where qty >=12
+db.inventory.find({qty : {$gte:12}})
+
+
+$lt(less than operator)
+find the inventory where qty <12
+db.inventory.find({qty : {$lt:12}})
+
+
+$lte(less than operator)
+find the inventory where qty <=12
+db.inventory.find({qty : {$lte:12}})
+
+
+
+$in (in operator)
+find the inventory whre qty = 10 , qty = 12
+db.inventory.find({qty: {$in: [10,12]}})
+
+
+$nin (in operator)
+find the inventory whre qty != 10 , qty != 12
+db.inventory.find({qty: {$nin: [10,12]}})
+
+________________________________________________________
+
+Logical operator ($and, $or, $not)
+db.inventory.deleteMany({});
+db.inventory.insertMany(
+[
+    {_id:1,item:{name:'ab',code:'123'},qty:10, tags:['A','B','C']},
+    {_id:2,item:{name:'cd',code:'123'},qty:11, tags:['D','E','M']},
+    {_id:3,item:{name:'ef',code:'456'},qty:12, tags:['F','B','D']},
+    {_id:4,item:{name:'gh',code:'456'},qty:13, tags:['G','O','C']},
+    {_id:5,item:{name:'ij',code:'567'},qty:10, tags:['A','E','D']},
+    {_id:6,item:{name:'ij',code:'567'},qty:10, tags:[['A','B'],'D']},
+    {_id:7,item:{name:'ij',code:'567'},qty:10, tags:['A','B']}
+]
+);
+
+$and (and operator)  
+find the inventory whre qty = 11 , qty = 12
+db.inventory.find({$and:[ {qty:{$eq:11}} , {qty:{$eq:12}} ] }) => logical error
+db.inventory.find({$or:[ {qty:{$eq:11}} , {qty:{$eq:12}} ] })
+db.inventory.find({qty: {$in: [11,12]}})
+
+
+find the inventory where qty = 10 and tags = B
+db.inventory.find({$and:[ {qty:{$eq:10}},{tags:{$eq:'B'}}]});
+
+
+qty in [11,2,12]   => qty = 11 or qty=2 or qty=12  
+                12 => 12=11   or 12=2   or 12=12 =>  false or flase or true => true
+
+qty not in  [12,10]  => qty != 12  and   qty!=10
+                      10 =>  10 != 12  and   10!=10  => true and false => false
+                      11 =>  11 != 12  and   11!=10  => true and true => true
+
+
+
+
+__________________________________________________________________________________________
+
+ELEMENT operator
+
+db.inventory.drop();
+db.inventory.insertMany(
+[
+    {_id:1,item:{name:'ab',code:'123'},qty:10.0, tags:['A','B','C']},
+    {_id:2,item:{name:'cd',code:'123'},qty:11, tags:['D','E','M']},
+    {_id:3,item:{name:'ef',code:'456'},qty:12, tags:['F','B','D']},
+    {_id:4,item:{name:'gh',code:'456'},qty:13, tags:['G','O','C']},
+    {_id:5,item:{name:'ij',code:'567'},qty:10, tags:['A','E','D']},
+    {_id:6,item:{name:'ij',code:'567'},qty:10, tags:[['A','B'],'D']},
+    {_id:7,item:{name:'ij',code:'567'},qty:10, tags:['A','B']},
+    {_id:8,item:{name:'ij',code:'567'}, tags:['B','A']},
+    {_id:9,item:{name:'ij',code:'567'}},
+    {_id:10,item:{name:'ij',code:'567'} , qty: '20' }
+]
+);
+
+$exists (to check whether the field are present or not)
+
+inventory which don't have qty field
+db.inventory.find({qty: {$exists:false}})
+
+inventory having qty= 13
+db.inventory.find({qty : {$eq:13}})
+db.inventory.find({qty: {$exists:true, $eq:13}})
+
+
+$type:
+inventory with qty as type string
+db.inventory.find({qty: {$type:'string'}})
+db.inventory.find({qty: {$type:'double'}})
+
+
+
+
+
+                 
