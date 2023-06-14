@@ -1,0 +1,35 @@
+
+component:
+Atlas: Cloud version, DB will be on cloud
+Mongo
+MongoD: Mongo Daemon or mongo server that will host the DB.
+Compass: It is a GUI equivalent to workbench of MySql , Sql developer of SQL
+
+
+show dbs  => display the db list
+
+create database
+cmd:   use <database_name>
+create and move inside db or if db exists then move inside the db
+example: use seed
+
+drop the database
+cmd: db.dropDatabase();
+
+To check the db name
+cmd: db
+
+create collection(table) employees
+cmd:  db.createCollection('employees')
+
+
+display the list of collections:
+cmd:  show collections
+
+
+
+drop the collection
+cmd: db.<collection_name>/drop()
+
+
+create db -> use db_name
