@@ -1,0 +1,228 @@
+# Assignment 01https://github.com/techramj/5_jun_2023_MongoDB/blob/main/03_assignment
+1. create the collection emp
+2. insert three document (record)
+   name:    salary:
+   name:    salary:    age:
+   first name   salary   age
+   
+3. display the document list
+
+#Assignement 02
+1. create the collection items
+   and insert 25 items in single query
+   _id:1, item:'Pen', qty:10
+   _id:2, item:'Pen', qty:10
+   _id:3, item:'Pen', qty:10
+   _id:4, item:'Pen', qty:10
+   .
+   .
+   .
+   _id:25, item:'Pencil', qty:100
+
+
+2. display all the record using find
+
+3. display all the record in single execution
+   db.items.find().toArray();
+   
+4. display the record using iteration
+db.employees.find().forEach((emp)=> {printjson(emp);});   
+
+________________________________________________________________________________________________________________
+
+#Assignment  03: Update
+execute the below query:
+db.emp.drop();
+db.emp.insertMany([
+    {name:'John', salary:10000},
+    {name:'John', salary:5000},
+    {name:'Sam', salary:6000},
+    {name:'Jack', salary:5000},
+    {name:'Joy', salary:3000, age:20},
+    {name:'Ajay', salary:1000},
+    {name:'Vijay', salary:10000},
+]);
+
+1. update t5he salary of Ajay to 9999
+db.emp.updateOne({name:'Ajay'}, {salary:9999})
+--MongoInvalidArgumentError: Update document requires atomic operators
+
+db.emp.updateOne({name:'Ajay'}, {$set : {salary:9999}})
+
+
+2. update the salary of John to 5555
+db.emp.updateOne({name:'John'}, {$set : {salary:5555}})
+
+3. how many rows will be modified for below query
+db.emp.updateOne({name:'Sam'}, {$set : {age:21}})
+
+db.emp.updateMany({name:'Sam'}, {$set : {age:22}})
+
+db.emp.updateOne({}, {$set : {age:23}})
+
+
+4.execute the below query and check the output
+db.emp.updateOne({name:'Vijay'}, {$set : {designation:'S/W engg'}})
+
+db.emp.replaceOne({name:'Joy'}, {designation:'S/W engg'})
+
+db.emp.replaceOne({name:'Jack'}, {name:'Jack', salary:8000, age:26,designation:'S/W engg'  })
+________________________________________________________________________________________________________________
+
+#Assignment  04: Delete
+delete one docuement
+delete more than one document using deleteMany
+eg:
+db.emp.deleteOne({name:'Vijay'});
+db.emp.deleteMany({name:'John'});
+db.emp.deleteOne({});
+db.emp.deleteMany({});
+ 
+________________________________________________________________________________________________________________
+#Assignment  05: Projection
+db.emp.drop();
+db.emp.insertMany([
+    {name:'John', salary:10000},
+    {name:'John', salary:5000},
+    {name:'Sam', salary:6000},
+    {name:'Jack', salary:5000},
+    {name:'Joy', salary:3000, age:20},
+    {name:'Ajay', salary:1000},
+    {name:'Vijay', salary:10000},
+]);
+db.emp.updateMany({}, {$set: {designation: 'S/W engg.'}});
+
+Projection:
+ db.emp.find({}, {name:1});
+ db.emp.find({}, {name:1, salary:1});
+ db.emp.find({}, {name:1, salary:1,_id:0});
+
+________________________________________________________________________________________________________________
+
+#Assignment  06:
+execute the below query:
+db.inventory.insertMany(
+[
+    {_id:1,item:{name:'ab',code:'123'},qty:10, tags:['A','B','C']},
+    {_id:2,item:{name:'cd',code:'123'},qty:11, tags:['D','E','M']},
+    {_id:3,item:{name:'ef',code:'456'},qty:12, tags:['F','B','D']},
+    {_id:4,item:{name:'gh',code:'456'},qty:13, tags:['G','O','C']},
+    {_id:5,item:{name:'ij',code:'567'},qty:10, tags:['A','E','D']},
+    {_id:6,item:{name:'ij',code:'567'},qty:10, tags:[['A','B'],'D']},
+    {_id:7,item:{name:'ij',code:'567'},qty:10, tags:['A','B']}
+]
+);
+
+
+________________________________________________________________________________________________________________
+#Assignment 07:
+db.inventory.drop();
+db.inventory.insertMany(
+[
+    {_id:1,item:{name:'ab',code:'123'},qty:10, tags:['A','B','C']},
+    {_id:2,item:{name:'cd',code:'123'},qty:11, tags:['D','E','M']},
+    {_id:3,item:{name:'ef',code:'456'},qty:12, tags:['F','B','D']},
+    {_id:4,item:{name:'gh',code:'456'},qty:13, tags:['G','O','C']},
+    {_id:5,item:{name:'ij',code:'567'},qty:10, tags:['A','E','D']},
+    {_id:6,item:{name:'ij',code:'567'},qty:10, tags:[['A','B'],'D']},
+    {_id:7,item:{name:'ij',code:'567'},qty:10, tags:['A','B']},
+    {_id:8,item:{name:'ij',code:'567'}, tags:['B','A']},
+    {_id:9,item:{name:'ij',code:'567'}},
+    {_id:10,item:{name:'ij',code:'567'} , qty: '20' }
+]
+);
+
+________________________________________________________________________________________________________________
+#Assignment  08:
+db.createCollection('budgets');
+db.budgets.insertMany([
+    {_id:1, category:'food', budget:400, spent:450},
+    {_id:2, category:'drinks', budget:100, spent:150},
+    {_id:3, category:'clothes', budget:1000, spent:700},
+    {_id:4, category:'travel', budget:500, spent:200},
+    {_id:5, category:'medicine', budget:100, spent:200},
+    {_id:6, category:'misc', budget:200, spent:200}
+]);
+
+
+
+________________________________________________________________________________________________________________
+#Assignment  09:
+db.createCollection('articles');
+
+db.articles.insertMany([
+    {_id:1, subject:'Core Java', author:'abc', views:60},
+    {_id:2, subject:'Adv Java', author:'def', views:50},
+    {_id:3, subject:'Spring', author:'ghi', views:70},
+    {_id:4, subject:'Spring boot', author:'pqr', views:60},
+    {_id:5, subject:'Spring microservices with Java', author:'def', views:40},
+    {_id:6, subject:'Java framework', author:'xyz', views:10},
+    {_id:7, subject:'MongoDB', author:'lmn', views:100}
+]);
+
+________________________________________________________________________________________________________________
+#assignment: 10
+db.test.insertMany([
+  {  val: 'abc' },
+  {  val: 'def' },
+  {  val: 'lmn' },
+  {  val: 'lmna' },
+  {  val: 'lmnad' }
+]);
+db.test.find({val:/a/})
+________________________________________________________________________________________________________________
+#assignment 11:
+db.articles.drop();
+db.articles.insertMany([
+    {_id:1, code:"xyz", 
+      tags:["school","book","bag","headphone"],
+      qty:[
+        {size:"S", num:10, color: "blue"},
+        {size:"M", num:20, color: "blue"},
+        {size:"L", num:3, color: "red"}
+      ]
+    },
+
+    {_id:2, code:"abc", 
+      tags:["school","book","headphone","pencil"],
+      qty:[
+        {size:"S", num:100, color: "blue"},
+        {size:"M", num:45, color: "green"},
+        {size:"L", num:10, color: "red"}
+      ]
+    },
+
+    {_id:3, code:"pqr", 
+      tags:["bag","headphone"],
+      qty:[
+        {size:"6", num:10, color: "green"},
+        {size:"7", num:40, color: "brown"},
+        {size:"8", num:5, color: "red"}
+      ]
+    }
+])
+
+_________________________________________________________________________________________________________________________
+#assignment 12:
+
+prerequisite:  execute the mapping scripts.
+create the script and execute in blogs db.
+/*
+User -----create-->     Post
+id                      id
+name                    title
+age                     text
+email                   tags :["tech", "db"]
+
+
+
+        comment
+          id
+          text
+          
+user will create a post. (jack, john, Sam, Jessica)
+jack created one post.
+john,Jessica commneted on the post created by Jack.
+
+post have many comments.
+*/
