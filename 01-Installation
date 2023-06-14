@@ -1,1 +1,30 @@
+Step 1: download mongo db
+URL:  https://www.mongodb.com/try/download/community
+For window: https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-6.0.6-signed.msi
 
+Step 2: Install mongo db. 
+click on the mongodb-windows-x86_64-6.0.6-signed.msi and accept the term and condition and select complete option and proceed.
+Once the installation is then close the welcome-compass popup.
+
+step 3: download the mongosh
+https://www.mongodb.com/try/download/shell
+download the zip file from above url.
+unzip the file.
+copy the mongosh file and paste in the bin folder of mongodb.
+ex: C:\Program Files\MongoDB\Server\6.0\bin
+
+
+step 4: add the bin path in the system environment variable
+C:\Program Files\MongoDB\Server\6.0\bin
+
+
+
+
+
+
+Step to execute the script
+-----------------------------
+to execute the script
+mongosh <db_name> absolute_path_of_file
+
+mongosh seed D:\workspace\mongodb\05-June-2023\a.js
