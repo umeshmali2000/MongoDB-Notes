@@ -1,0 +1,125 @@
+/*mapping :
+
+type:
+  one to one
+  emp 1-------------->1 mob
+  emp 1-------------->1 address
+  emp 1----------------------1 phone
+
+  
+  one to many /many to one
+  question 1----------------->M answer
+  city 1-----------------M citizen
+  emp M-------------------1 dept
+
+
+  many to many 
+   order  M --------------->m  product
+   student   <-------------->  teacher
+   emp    M<------------------>M   project
+
+way of mapping:
+  Embedded
+  reference
+
+
+One to One mapping
+emp <-> address
+
+emp
+  id
+  name
+  salary
+
+
+use seed;
+*/
+
+db.emp.insertOne({ name: "Jack", salary: 2000 });
+db.address.insertOne({ street: "Lane no 5", city: "Pune", pincode: 411021 });
+db.emp_address.insertOne({
+  empId: ObjectId("648875f0b34a233c7aba9c06"),
+  addressId: ObjectId("64887622b34a233c7aba9c07"),
+});
+
+or
+
+db.emp.insertOne({
+  _id: 101,
+  name: "Jack",
+  salary: 2000,
+  address: { street: "Lane no 5", city: "Pune", pincode: 411021 },
+});
+
+or
+
+db.address.insertOne({_id:1001, street: "Lane no 5", city: "Pune", pincode: 411021 });
+db.emp.insertOne({
+  _id: 101,
+  name: "Jack",
+  salary: 2000,
+  address: 1001,
+});
+
+________________________________________________________________________________________________________________________________
+
+/*
+one to many
+
+question has many answer
+
+*/
+
+//reference approach
+db.answers.insertMany([
+  { _id: "q1a1", ans: "Flexible dynamic docuement schemas" },
+  { _id: "q1a2", ans: "Easy horizontal scale sharding" },
+]);
+db.questions.insertOne({
+  creator: "Ram",
+  question: "Advantage of MongoDB",
+  code: "q1",
+  answers: ["q1a1", "q2a2"],
+}); 
+
+//embedded approach
+db.questions.insertOne({
+  creator: "Ram",
+  question: "Advantage of MongoDB",
+  code: "q1",
+  answers: [
+    { ans: "Flexible dynamic docuement schemas" },
+    { ans: "Easy horizontal scale sharding" },
+  ],
+}); 
+
+
+//size of one document 16 mb
+
+//city -> citizen (assigement)
+
+db.citizens.insertMany([
+    {_id:1, name:'', address:{street:'', city:'', pincode:1234}, age:26 },
+    {_id:2, name:'', address:{street:'', city:'', pincode:1234}, age:26 }
+]);
+
+db.cities.insertOne({name:'Pune', cordinate:{lattitude:10, longitude:44}, citizens:[1,2]});
+
+
+db.cities.insertOne({
+  name: "Pune",
+  cordinate: { lattitude: 10, longitude: 44 },
+  citizens: [
+    {
+      name: "",
+      address: { street: "", city: "", pincode: 1234 },
+      age: 26,
+    },
+    {
+      name: "",
+      address: { street: "", city: "", pincode: 1234 },
+      age: 26,
+    },
+  ],
+});
+
